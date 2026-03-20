@@ -2,10 +2,8 @@
 
 #include "core/types.hpp"
 
-#include <atomic>
-#include <mutex>
+#include <chrono>
 #include <string>
-#include <thread>
 #include <unordered_map>
 
 namespace htop_killer::collectors {
@@ -13,24 +11,27 @@ namespace htop_killer::collectors {
 class LinuxLanCollector {
 public:
     LinuxLanCollector();
-    ~LinuxLanCollector();
-
     [[nodiscard]] core::LanStats collect();
 
 private:
-    void        scan_loop();
-    void        refresh_arp();
+    struct HostSnapshot {
+        std::uint64_t rx_bytes = 0;
+        std::uint64_t tx_bytes = 0;
+    };
 
-    std::string best_iface();
-    std::string read_local_ip(const std::string& iface);
-    std::string read_local_mac(const std::string& iface);
-    std::string read_gateway();
+    [[nodiscard]] std::unordered_map<std::string, std::string>   read_arp_table();
+    [[nodiscard]] std::string                                    resolve_hostname(const std::string& ip);
+    [[nodiscard]] std::string                                    oui_vendor(const std::string& mac);
+    [[nodiscard]] std::string                                    read_gateway();
+    [[nodiscard]] std::string                                    read_local_ip();
+    [[nodiscard]] std::unordered_map<std::string, HostSnapshot>  read_conntrack();
+    [[nodiscard]] std::unordered_map<std::string, std::uint32_t> read_tcp_connections();
 
-    mutable std::mutex mutex_;
-    core::LanStats     state_;
-
-    std::jthread     thread_;
-    std::atomic_bool running_{false};
+    std::unordered_map<std::string, HostSnapshot> prev_bytes_;
+    std::unordered_map<std::string, std::string>  hostname_cache_;
+    core::TimePoint                               prev_time_{};
+    std::string                                   gateway_;
+    std::string                                   local_ip_;
 };
 
 } // namespace htop_killer::collectors

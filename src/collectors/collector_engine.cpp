@@ -21,6 +21,7 @@ void CollectorEngine::stop() {
 }
 
 void CollectorEngine::loop() {
+    // LAN scan is slow (hostname resolution) — run it every 5 seconds
     int lan_tick = 0;
     core::LanStats last_lan;
 

@@ -4,7 +4,7 @@ System monitor with live graphs. Reads `/proc` directly, renders in the terminal
 
 ```
   ◈ htop_killer  Intel Core i9-13900K       up 3d 14h  load 1.42 0.89 0.71
-  CPU    │   MEM   │   NET   │  DISK  │  PROCS
+  CPU    │   MEM   │   NET   │  DISK  │  PROCS  |  LAN
  ─────────────────────────────────────────────────────────────────────
  CPU  16 cores                                    34.2%   peak: 91.0%
  ────────────────────────────────────────────────────────────────────
@@ -12,6 +12,8 @@ System monitor with live graphs. Reads `/proc` directly, renders in the terminal
     ▄▄████▄         ▄▄▄▄▄███████▄▄▄
  ▄▄▄███████████▄▄▄▄██████████████████▄▄▄▄▄▄▄▄▄▄▄████████▄▄
 ```
+
+
 
 ## Requirements
 
@@ -81,6 +83,13 @@ src/
 ```
 
 Data flows one way: collectors write to `DataStore`, UI reads from it. The shared state is guarded by `std::shared_mutex`. History is stored in fixed-size ring buffers (120 samples ≈ 2 min at 1 Hz).
+
+## Example
+
+![MEM](./.assets/MEM.png)
+![DISK](./.assets/DISK.png)
+![NET](./.assets/NET.png)
+
 
 ## License
 

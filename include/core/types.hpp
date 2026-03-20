@@ -108,12 +108,37 @@ struct ProcessList {
     TimePoint                timestamp;
 };
 
+// ── Network device (LAN host) ─────────────────────────────────────────────────
+struct LanDevice {
+    std::string   ip;
+    std::string   mac;
+    std::string   hostname;
+    std::string   vendor;
+    std::string   iface;
+    std::uint64_t rx_bytes   = 0;
+    std::uint64_t tx_bytes   = 0;
+    double        rx_rate    = 0.0;
+    double        tx_rate    = 0.0;
+    std::uint32_t open_ports = 0;
+    bool          is_gateway = false;
+    bool          is_self    = false;
+    TimePoint     last_seen;
+};
+
+struct LanStats {
+    std::vector<LanDevice> devices;
+    std::string            local_ip;
+    std::string            gateway_ip;
+    TimePoint              timestamp;
+};
+
 struct SystemSnapshot {
     CpuStats    cpu;
     MemStats    mem;
     NetStats    net;
     DiskStats   disk;
     ProcessList procs;
+    LanStats    lan;
     TimePoint   timestamp;
 };
 

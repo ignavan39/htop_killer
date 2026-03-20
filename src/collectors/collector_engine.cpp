@@ -21,6 +21,9 @@ void CollectorEngine::stop() {
 }
 
 void CollectorEngine::loop() {
+    int lan_tick = 0;
+    core::LanStats last_lan;
+
     while (running_.load()) {
         const auto tick_start = core::Clock::now();
 
@@ -32,6 +35,13 @@ void CollectorEngine::loop() {
             snap.net       = net_.collect();
             snap.disk      = disk_.collect();
             snap.procs     = procs_.collect(snap.mem.total_kb, snap.cpu.core_count);
+
+            if (lan_tick == 0) {
+                last_lan = lan_.collect();
+            }
+            snap.lan = last_lan;
+            lan_tick = (lan_tick + 1) % 5;
+
             store_.update(std::move(snap));
         } catch (...) {}
 

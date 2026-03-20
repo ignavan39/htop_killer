@@ -6,6 +6,7 @@
 #include "collectors/linux_net_collector.hpp"
 #include "collectors/linux_disk_collector.hpp"
 #include "collectors/linux_process_collector.hpp"
+#include "collectors/linux_lan_collector.hpp"
 
 #include <atomic>
 #include <chrono>
@@ -40,6 +41,7 @@ private:
     LinuxNetCollector     net_;
     LinuxDiskCollector    disk_;
     LinuxProcessCollector procs_;
+    LinuxLanCollector     lan_;
 };
 
 } // namespace htop_killer::collectors

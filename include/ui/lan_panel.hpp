@@ -26,6 +26,11 @@ inline ftxui::Element make_lan_panel(const core::LanStats& lan) {
     double total_rx = 0.0, total_tx = 0.0;
     for (const auto& d : lan.devices) { total_rx += d.rx_rate; total_tx += d.tx_rate; }
 
+    auto sniffer_status = lan.sniffer_active
+        ? (text(" ● packet capture active") | ftxui::color(theme::kNetRx))
+        : (text(" ○ no packet capture (run as root for traffic data)")
+           | ftxui::color(theme::kMemPrimary));
+
     auto summary = hbox(
         text(" LAN") | bold | color(theme::kCpuPrimary),
         text(fmt::format("  {} devices", lan.devices.size())) | color(theme::kDimText),
@@ -49,7 +54,7 @@ inline ftxui::Element make_lan_panel(const core::LanStats& lan) {
     );
 
     Elements rows;
-    rows.push_back(summary);
+    rows.push_back(hbox(summary, filler(), sniffer_status));
     rows.push_back(separator() | color(theme::kDimText));
     rows.push_back(header);
     rows.push_back(separator() | color(theme::kDimText));

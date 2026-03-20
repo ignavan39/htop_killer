@@ -126,6 +126,7 @@ struct LanDevice {
 };
 
 struct LanStats {
+    bool sniffer_active = false;
     std::vector<LanDevice> devices;
     std::string            local_ip;
     std::string            gateway_ip;
